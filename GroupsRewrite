@@ -1,0 +1,48 @@
+#!/usr/bin/python3
+
+import csv
+import os
+
+os.system("head -n-1 /usr/local/etc/groups.txt > /usr/local/etc/groups.tmp")
+os.system("sed -i '$ s/.$/\",/' /usr/local/etc/groups.tmp")
+os.system("sed -i 's/\([[:alpha:]]\)/DMR+: \\1/' /usr/local/etc/TGList_DMRp.txt")
+os.system("sed -i 's/\([[:alpha:]]\)/FreeDMR: \\1/' /usr/local/etc/TGList_FreeDMR.txt")
+os.system("sed -i 's/\([[:alpha:]]\)/SystemX: \\1/' /usr/local/etc/TGList_SystemX.txt")
+os.system("sed -i 's/\([[:alpha:]]\)/TGIF: \\1/' /usr/local/etc/TGList_TGIF.txt")
+keys = ['tg', 'name']
+f = open("/usr/local/etc/groups.tmp", "a")
+with open('/usr/local/etc/TGList_SystemX.txt', mode='r') as csv_file:
+        systemx_read = csv.DictReader(csv_file, fieldnames=keys)
+        for row in systemx_read:
+                f.write(f'  \"{row["tg"]}\": \"{row["name"]}\",\n')
+with open('/usr/local/etc/TGList_TGIF.txt', mode='r') as csv_file:
+        TGIF_read = csv.DictReader(csv_file, fieldnames=keys)
+        for row in TGIF_read:
+                f.write(f'  \"{row["tg"]}\": \"{row["name"]}\",\n')
+
+#I'm remapping FreeDMR to prefix 6, the TGList file comes with it using prefix 8
+#so this bit changes the talkgroup numbers too
+g = open ("/usr/local/etc/TGList_FreeDMR.tmp", "w")
+with open('/usr/local/etc/TGList_FreeDMR.txt', mode='r') as csv_file:
+        FreeDMR_read = csv.DictReader(csv_file, fieldnames=keys)
+        for row in FreeDMR_read:
+                if len(row["tg"]) == 7:
+                        string = row["tg"].replace('8', '6', 1)
+                        row["tg"] = string
+                        f.write(f'  \"{row["tg"]}\": \"{row["name"]}\",\n')
+                        g.write(f'{row["tg"]},{row["name"]}\n')
+                else:
+                        f.write(f'  \"{row["tg"]}\": \"{row["name"]}\",\n')
+                        g.write(f'{row["tg"]},{row["name"]}\n')
+g.close()
+with open('/usr/local/etc/TGList_DMRp.txt', mode='r') as csv_file:
+        DMRp_read = csv.DictReader(csv_file, fieldnames=keys)
+        for row in DMRp_read:
+                f.write(f'  \"{row["tg"]}\": \"{row["name"]}\",\n')
+f.write("}")
+f.close()
+
+#copy the .tmp files to production
+os.system("cp -f -p /usr/local/etc/newgroups.txt /usr/local/etc/groups.txt")
+os.system("cp -f -p /usr/local/etc/TGList_FreeDMR.tmp /usr/local/etc/TGList_FreeDMR.txt")
+

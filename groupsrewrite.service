@@ -1,0 +1,10 @@
+[Unit]
+Description=Monitor groups.txt and re-write to include all networks
+
+[Service]
+Type=simple
+WorkingDirectory=/usr/local/etc/
+ExecStart=/usr/local/etc/GroupsRewrite
+
+[Install]
+WantedBy=multi-user.target

@@ -1,8 +1,9 @@
 # MMDVM_groupsrewrite
-Pistar-Update pulls in and generates a groups.txt file from BrandMeister only
-this adds other DMR networks to the groups.txt file and prepends 
-the network name so that the group name will show up for all the 
-networks you're connected to in a multi-network system
+Pistar-Update pulls in and generates a groups.txt file from BrandMeister only.
+
+This adds other DMR networks to the groups.txt file and prepends 
+the network name so that the group name will show up on your pi-star
+dashboard for all the networks you're connected to in a multi-network system
 
 Just put the .service file in /etc/systemd/system/ and enable it and start it, 
 and GroupsRewrite will happily sleep in the background, checking

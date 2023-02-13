@@ -1,5 +1,5 @@
 # MMDVM_groupsrewrite
-Pistar-Update pulls in a groups.txt file from BrandMeister only
+Pistar-Update pulls in and generates a groups.txt file from BrandMeister only
 this adds other DMR networks to the groups.txt file and prepends 
 the network name so that the group name will show up for all the 
 networks you're connected to in a multi-network system
